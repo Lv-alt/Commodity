@@ -1,9 +1,11 @@
-package com.za.user.db;
+package com.za.user.db.dataobject;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.Date;
 
 /**
  * @author lvweichen
@@ -17,5 +19,13 @@ public class AbstractDO {
     private Long id;
     
     private Integer delState;
+    
+    private String created;
+    
+    private Date createDate;
+    
+    private String updated;
+    
+    private Date updateDate;
     
 }

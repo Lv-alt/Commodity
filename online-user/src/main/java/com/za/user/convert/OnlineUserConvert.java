@@ -1,6 +1,6 @@
 package com.za.user.convert;
 
-import com.za.user.db.OnlineUserDO;
+import com.za.user.db.dataobject.OnlineUserDO;
 import com.za.user.request.OnlineUserRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;

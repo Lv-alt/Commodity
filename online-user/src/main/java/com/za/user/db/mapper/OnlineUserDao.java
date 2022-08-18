@@ -1,7 +1,7 @@
-package com.za.user.mapper;
+package com.za.user.db.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.za.user.db.OnlineUserDO;
+import com.za.user.db.dataobject.OnlineUserDO;
 import org.springframework.stereotype.Component;
 
 

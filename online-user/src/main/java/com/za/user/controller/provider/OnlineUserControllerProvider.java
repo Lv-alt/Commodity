@@ -1,13 +1,10 @@
-package com.za.user.controller;
+package com.za.user.controller.provider;
 
-import com.za.user.db.OnlineUserDO;
+import com.za.user.controller.OnlineUserControllerApi;
 import com.za.user.request.OnlineUserRequest;
 import com.za.user.response.ResponseDTO;
 import com.za.user.service.OnlineUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -15,14 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2022/8/17 6:01 下午
  */
 @RestController
-@RequestMapping("/api/user")
-public class OnlineUserController {
+public class OnlineUserControllerProvider implements OnlineUserControllerApi {
 
     @Autowired
     private OnlineUserService userService;
 
-    @PostMapping("/saveUser")
-    public ResponseDTO saveUser(@RequestBody OnlineUserRequest userRequest) {
+    @Override
+    public ResponseDTO saveUser(OnlineUserRequest userRequest) {
         return userService.saveUser(userRequest);
     }
 

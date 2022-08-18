@@ -1,4 +1,4 @@
-package com.za.user.db;
+package com.za.user.db.dataobject;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -11,10 +11,19 @@ import lombok.Data;
 @TableName("online_user")
 public class OnlineUserDO extends AbstractDO {
 
+    /**
+     * 账户
+     */
     private String account;
 
+    /**
+     * 密码
+     */
     private String passWord;
 
+    /**
+     * 用户状态1，正常。2 冻结
+     */
     private Integer state;
 
 }
