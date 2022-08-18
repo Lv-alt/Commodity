@@ -15,6 +15,13 @@ public class ResponseUtil {
         responseDTO.setMessage(errorEnum.getMessage());
         return responseDTO;
     }
+
+    public static ResponseDTO error(String code, String message) {
+        ResponseDTO responseDTO = new ResponseDTO();
+        responseDTO.setCode(code);
+        responseDTO.setMessage(message);
+        return responseDTO;
+    }
     
     public static ResponseDTO success(Object data) {
         ResponseDTO responseDTO = new ResponseDTO();

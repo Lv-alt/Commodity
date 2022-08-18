@@ -24,6 +24,11 @@ public class OnlineUserDO extends AbstractDO {
     /**
      * 用户状态1，正常。2 冻结
      */
-    private Integer state;
+    private Integer state = 1;
+
+    /**
+     * 角色
+     */
+    private Integer roleId;
 
 }

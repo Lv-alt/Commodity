@@ -11,6 +11,7 @@ import com.za.user.db.dataobject.OnlineSourceUrlDO;
 import com.za.user.db.dataobject.OnlineUserDO;
 import com.za.user.db.mapper.OnlineUserDao;
 import com.za.user.enums.ErrorEnum;
+import com.za.user.exception.custo.UniqueIndexException;
 import com.za.user.handler.OnlineSourceUrlHandler;
 import com.za.user.request.OnlineUserRequest;
 import com.za.user.response.OnlineUserLoginResponse;
@@ -21,7 +22,6 @@ import com.za.user.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +46,11 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         OnlineUserDO onlineUserDO = OnlineUserConvert.CONVERT.requestConvertDO(request);
         //密码加密
         onlineUserDO.setPassWord(Base64Encoder.encode(onlineUserDO.getPassWord()));
-        userDao.insert(onlineUserDO);
+        try {
+            userDao.insert(onlineUserDO);
+        } catch (Exception e) {
+            throw new UniqueIndexException("account 不可重复");            
+        }
         return ResponseUtil.success(true);
     }
 

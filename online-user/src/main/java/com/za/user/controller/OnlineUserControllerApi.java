@@ -1,10 +1,14 @@
 package com.za.user.controller;
 
 import com.za.user.request.OnlineUserRequest;
+import com.za.user.response.OnlineUserLoginResponse;
 import com.za.user.response.ResponseDTO;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.validation.Valid;
 
 /**
  * user api
@@ -20,6 +24,15 @@ public interface OnlineUserControllerApi {
      * @return result
      */
     @PostMapping("/saveUser")
-    ResponseDTO saveUser(@RequestBody OnlineUserRequest userRequest);
+    ResponseDTO saveUser(OnlineUserRequest userRequest);
+
+
+    /**
+     * user login
+     * @param userRequest request
+     * @return result
+     */
+    @PostMapping("/login")
+    ResponseDTO<OnlineUserLoginResponse> login(@Valid @RequestBody OnlineUserRequest userRequest);
     
 }
