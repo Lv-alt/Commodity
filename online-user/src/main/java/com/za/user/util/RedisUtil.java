@@ -35,5 +35,19 @@ public class RedisUtil<T> {
     public T getCache(String key) {
         return redisTemplate.opsForValue().get(key);
     }
+
+
+    /**
+     * 判断key是否存在
+     * @param key key
+     * @return result
+     */
+    public boolean containsKey(String key) {
+        return redisTemplate.hasKey(key);
+    }
+    
+    public boolean delKey(String key) {
+        return redisTemplate.delete(key);
+    }
     
 }

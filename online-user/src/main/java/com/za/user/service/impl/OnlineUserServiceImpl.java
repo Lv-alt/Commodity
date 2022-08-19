@@ -17,6 +17,7 @@ import com.za.user.request.OnlineUserRequest;
 import com.za.user.response.OnlineUserLoginResponse;
 import com.za.user.response.ResponseDTO;
 import com.za.user.service.OnlineUserService;
+import com.za.user.util.GlobalConstant;
 import com.za.user.util.RedisUtil;
 import com.za.user.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +64,27 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         }
         //登陆成功查询权限
         List<OnlineSourceUrlDO> sourceUrlList = sourceUrlHandler.selectSourceUrlByUser(userDO);
-        String token = UUID.randomUUID().toString().replace("-","");
-        OnlineUserLoginResponse result = builderLoginResponse(userDO, sourceUrlList, token);
+        //构建返回体
+        OnlineUserLoginResponse result = builderLoginResponse(userDO, sourceUrlList);
         //存缓存
         String resultJSONString = JSONObject.toJSONString(result);
-        redisUtil.setCache(token,resultJSONString);
+        String token = GlobalConstant.USER_REDIS_KEY + Base64.encode(resultJSONString);
+        addOrDelToken(token, resultJSONString);
+        //存token
+        result.setToken(token);
         return ResponseUtil.success(result);
+    }
+
+    /**
+     * 添加或者删除token
+     * @param token token
+     */
+    private void addOrDelToken(String token, String resultJSONString) {
+        //如果key 已存在就删除
+        if (redisUtil.containsKey(token)) {
+            redisUtil.delKey(token);
+        }
+        redisUtil.setCache(token, resultJSONString);
     }
 
     /**
@@ -77,10 +93,10 @@ public class OnlineUserServiceImpl implements OnlineUserService {
      * @param sourceUrlDOList source
      * @return result
      */
-    private OnlineUserLoginResponse builderLoginResponse(OnlineUserDO userDO, List<OnlineSourceUrlDO> sourceUrlDOList, String token) {
+    private OnlineUserLoginResponse builderLoginResponse(OnlineUserDO userDO, List<OnlineSourceUrlDO> sourceUrlDOList) {
+        //生成token
         OnlineUserLoginResponse loginResponse = new OnlineUserLoginResponse();
         loginResponse.setAccount(userDO.getAccount());
-        loginResponse.setToken(token);
         List<String> list = Optional.of(sourceUrlDOList.stream().map(OnlineSourceUrlDO::getSource).collect(Collectors.toList())).orElse(Collections.emptyList());
         loginResponse.setSource(list);
         return loginResponse;
