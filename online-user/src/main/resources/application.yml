@@ -19,3 +19,8 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
+  # 配置mybatis删除时给逻辑删除字段赋值为1
+  global-config:
+    db-config:
+      logic-delete-value: 2
+      logic-not-delete-value: 1

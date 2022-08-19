@@ -23,6 +23,8 @@ public interface OnlineUserService {
      * @param request request
      * @return data
      */
-    ResponseDTO<OnlineUserLoginResponse> login(OnlineUserRequest request);  
+    ResponseDTO<OnlineUserLoginResponse> login(OnlineUserRequest request);
+    
+    
 
 }

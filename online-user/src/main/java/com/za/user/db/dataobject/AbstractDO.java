@@ -1,9 +1,6 @@
 package com.za.user.db.dataobject;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,6 +18,7 @@ public class AbstractDO {
     private Long id;
     
     @TableField(fill = FieldFill.INSERT)
+    @TableLogic
     private Integer delState;
 
     @TableField(fill = FieldFill.INSERT)
