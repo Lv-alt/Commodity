@@ -8,7 +8,8 @@ package com.za.user.enums;
 public enum ErrorEnum {
 
     DEFAULT_ERROR("500","系统异常"),
-    LOGIN("001","用户名或密码异常");
+    LOGIN("001","用户名或密码异常"),
+    LOGIN_AUTH("002","权限不足");
     
     ErrorEnum(String code,String message) {
         this.code = code;

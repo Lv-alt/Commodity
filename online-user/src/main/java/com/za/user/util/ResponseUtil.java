@@ -31,7 +31,7 @@ public class ResponseUtil {
         return responseDTO;
     }
     
-    public static ResponseDTO fail(String message, String code) {
+    public static ResponseDTO fail(String code, String message) {
         ResponseDTO responseDTO = new ResponseDTO();
         responseDTO.setCode(code);
         responseDTO.setMessage(message);

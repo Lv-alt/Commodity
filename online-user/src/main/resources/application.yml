@@ -24,3 +24,9 @@ mybatis-plus:
     db-config:
       logic-delete-value: 2
       logic-not-delete-value: 1
+za:
+  user:
+    not-filter-url: 
+      list: 
+        - url: /api/user/login
+        

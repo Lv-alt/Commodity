@@ -2,7 +2,6 @@ package com.za.user.service.impl;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.codec.Base64Encoder;
-import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -60,7 +59,7 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         String encodePassword = Base64.encode(request.getPassWord());
         OnlineUserDO userDO = userDao.selectOne(Wrappers.<OnlineUserDO>lambdaQuery().eq(OnlineUserDO::getAccount, request.getAccount()).eq(OnlineUserDO::getPassWord, encodePassword));
         if(ObjectUtil.isEmpty(userDO)) {
-            return ResponseUtil.fail(ErrorEnum.LOGIN.getMessage(),ErrorEnum.LOGIN.getCode());     
+            return ResponseUtil.fail(ErrorEnum.LOGIN.getCode(), ErrorEnum.LOGIN.getMessage());     
         }
         //登陆成功查询权限
         List<OnlineSourceUrlDO> sourceUrlList = sourceUrlHandler.selectSourceUrlByUser(userDO);

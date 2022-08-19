@@ -9,6 +9,6 @@
         ON usr.role_id = rs.role_id
         INNER JOIN online_source_url su
         ON rs.source_id = su.id
-        WHERE usr.id = #{user.id}
+        WHERE usr.id = #{user.id} AND rs.del_state = 1 AND usr.del_state = 1 AND su.del_state = 1
     </select>
 </mapper>
