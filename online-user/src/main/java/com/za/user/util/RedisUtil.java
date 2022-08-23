@@ -1,11 +1,11 @@
 package com.za.user.util;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lvweichen 🛺 ☁ ☁ ☁ …… ️🏃
@@ -19,12 +19,18 @@ public class RedisUtil<T> {
     private RedisTemplate<String,T> redisTemplate;
 
     /**
-     * 设置缓存
+     * 默认半小时的过期时间
+     */
+    private final static Long EXPIRE_DEFAULT_TIME = 60 * 30L;
+
+    /**
+     * 设置缓存 并设置过期时间
      * @param key key
      * @param value value
      */
     public void setCache(String key,T value) {
         redisTemplate.opsForValue().set(key, value);
+        redisTemplate.expire(key, EXPIRE_DEFAULT_TIME , TimeUnit.SECONDS);
     }
 
     /**
@@ -45,9 +51,26 @@ public class RedisUtil<T> {
     public boolean containsKey(String key) {
         return redisTemplate.hasKey(key);
     }
-    
+
+    /**
+     * 删除某个key
+     * @param key key
+     * @return result
+     */
     public boolean delKey(String key) {
         return redisTemplate.delete(key);
+    }
+
+    /**
+     * 添加缓存之前如果key存在先删除key
+     * @param key key
+     * @param value value
+     */
+    public void setCacheBeforeDel(String key, T value) {
+        if (containsKey(key)) {
+            delKey(key);
+        }
+        setCache(key, value);
     }
     
 }

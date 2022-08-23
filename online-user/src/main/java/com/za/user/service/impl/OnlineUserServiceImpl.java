@@ -2,6 +2,7 @@ package com.za.user.service.impl;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.codec.Base64Encoder;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -59,16 +60,13 @@ public class OnlineUserServiceImpl implements OnlineUserService {
         String encodePassword = Base64.encode(request.getPassWord());
         OnlineUserDO userDO = userDao.selectOne(Wrappers.<OnlineUserDO>lambdaQuery().eq(OnlineUserDO::getAccount, request.getAccount()).eq(OnlineUserDO::getPassWord, encodePassword));
         if(ObjectUtil.isEmpty(userDO)) {
-            return ResponseUtil.fail(ErrorEnum.LOGIN.getCode(), ErrorEnum.LOGIN.getMessage());     
+            return ResponseUtil.fail(ErrorEnum.LOGIN.getCode(), ErrorEnum.LOGIN.getMessage());
         }
         //登陆成功查询权限
         List<OnlineSourceUrlDO> sourceUrlList = sourceUrlHandler.selectSourceUrlByUser(userDO);
         //构建返回体
         OnlineUserLoginResponse result = builderLoginResponse(userDO, sourceUrlList);
-        //存缓存
-        String resultJSONString = JSONObject.toJSONString(result);
-        String token = GlobalConstant.USER_REDIS_KEY + Base64.encode(resultJSONString);
-        addOrDelToken(token, resultJSONString);
+        String token = getToken(result);
         //存token
         result.setToken(token);
         return ResponseUtil.success(result);
@@ -76,14 +74,16 @@ public class OnlineUserServiceImpl implements OnlineUserService {
 
     /**
      * 添加或者删除token
-     * @param token token
+     * @param result responseInfo
      */
-    private void addOrDelToken(String token, String resultJSONString) {
-        //如果key 已存在就删除
-        if (redisUtil.containsKey(token)) {
-            redisUtil.delKey(token);
-        }
+    private String getToken(OnlineUserLoginResponse result) {
+        //1，根据dtoJson串存储uuid
+        String resultJSONString = JSONObject.toJSONString(result);
+        String uuid = UUID.randomUUID().toString();
+        String responseJSONToken = Base64.encode(uuid+ GlobalConstant.USER_REDIS_KEY + resultJSONString);
+        String token = Base64.encode(responseJSONToken);
         redisUtil.setCache(token, resultJSONString);
+        return token;
     }
 
     /**

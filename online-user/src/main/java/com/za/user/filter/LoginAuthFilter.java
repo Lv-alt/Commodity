@@ -1,5 +1,6 @@
 package com.za.user.filter;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.za.user.config.OnlineUserProperties;
@@ -62,6 +63,9 @@ public class LoginAuthFilter implements Filter {
      */
     private boolean auth(HttpServletRequest request) {
         OnlineUserDTO userInfo = userUtil.getUserInfo();
+        if (ObjectUtil.isEmpty(userInfo)) {
+            return false;
+        }
         // 判断是否有权限访问目标url
         for (String item : Optional.of(userInfo.getSource()).orElse(Collections.emptyList())) {
             if (request.getRequestURL().toString().endsWith(item)) {
