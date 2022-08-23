@@ -77,11 +77,19 @@ public class OnlineUserServiceImpl implements OnlineUserService {
      * @param result responseInfo
      */
     private String getToken(OnlineUserLoginResponse result) {
-        //1，根据dtoJson串存储uuid
         String resultJSONString = JSONObject.toJSONString(result);
+        String responseJSONToken = Base64.encode(GlobalConstant.USER_REDIS_KEY + resultJSONString);
+        // 如果一个用户多次登陆 删除以前的token
+        if (redisUtil.containsKey(responseJSONToken)) {
+            String uuid = redisUtil.getCache(responseJSONToken);
+            String token = Base64.encode(uuid + responseJSONToken);
+            redisUtil.delKey(responseJSONToken);
+            redisUtil.delKey(token);
+        }
         String uuid = UUID.randomUUID().toString();
-        String responseJSONToken = Base64.encode(uuid+ GlobalConstant.USER_REDIS_KEY + resultJSONString);
-        String token = Base64.encode(responseJSONToken);
+        //1，根据dtoJson串存储uuid
+        redisUtil.setCache(responseJSONToken, uuid);
+        String token = Base64.encode(uuid + responseJSONToken);
         redisUtil.setCache(token, resultJSONString);
         return token;
     }
